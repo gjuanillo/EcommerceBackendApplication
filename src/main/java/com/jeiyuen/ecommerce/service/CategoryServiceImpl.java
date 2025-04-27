@@ -13,14 +13,17 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    //Save Categories to an Array temporarily
     private List<Category> categories = new ArrayList<>();
     Long incrementID = 1L;
 
+    //Return list of categories
     @Override
     public List<Category> getAllCategories() {
         return categories;
     }
 
+    //Save Category
     @Override
     public void createCategory(Category category) {
         if (category.getCategoryId() != null) {
@@ -30,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         categories.add(category);
     }
 
+    //Delete Category
     @Override
     public String deleteCategory(Long id) {
         Category category = categories.stream()
@@ -40,6 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
         return "Category with categoryID: " + id + " deleted successfully!";
     }
 
+    //Update Category
     @Override
     public Category updateCategory(Long id, Category category) {
         Optional<Category> optionalCategory = categories.stream()

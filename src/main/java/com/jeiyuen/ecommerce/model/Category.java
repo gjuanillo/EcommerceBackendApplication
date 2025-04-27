@@ -1,14 +1,18 @@
 package com.jeiyuen.ecommerce.model;
 
 public class Category{
+    //Define Fields
     private Long categoryId;
     private String categoryName;
 
+    //Constructors
     public Category(){}
     public Category(Long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
+
+    //Getters and Setters
     public Long getCategoryId() {
         return categoryId;
     }
