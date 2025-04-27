@@ -2,12 +2,12 @@ package com.jeiyuen.ecommerce.model;
 
 public class Category{
     private Long categoryId;
-    private String categoryMame;
+    private String categoryName;
 
     public Category(){}
-    public Category(Long categoryId, String categoryMame) {
+    public Category(Long categoryId, String categoryName) {
         this.categoryId = categoryId;
-        this.categoryMame = categoryMame;
+        this.categoryName = categoryName;
     }
     public Long getCategoryId() {
         return categoryId;
@@ -15,11 +15,11 @@ public class Category{
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
-    public String getCategoryMame() {
-        return categoryMame;
+    public String getCategoryName() {
+        return categoryName;
     }
-    public void setCategoryMame(String categoryMame) {
-        this.categoryMame = categoryMame;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
 }
