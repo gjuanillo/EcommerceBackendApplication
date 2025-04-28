@@ -13,10 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    // Save Categories to an Array temporarily
-    // private List<Category> categories = new ArrayList<>();
-    // Long incrementID = 1L;
-
     private CategoryRepository categoryRepository;
 
     @Autowired
@@ -36,7 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.getCategoryId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "ID is automatically generated, cannot assign ID");
         }
-        // category.setCategoryId(incrementID++);
         categoryRepository.save(category);
     }
 
@@ -45,11 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
-        // List<Category> categories = categoryRepository.findAll();
-        // Category category = categories.stream()
-        //         .filter(c -> c.getCategoryId().equals(id))
-        //         .findFirst()
-        //         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
         categoryRepository.delete(category);
         return "Category with categoryID: " + id + " deleted successfully!";
     }
@@ -62,18 +52,5 @@ public class CategoryServiceImpl implements CategoryService {
         category.setCategoryId(id);
         savedCategory = categoryRepository.save(category);
         return savedCategory;
-        // List<Category> categories = categoryRepository.findAll();
-        // Optional<Category> optionalCategory = categories.stream()
-        // .filter(c -> c.getCategoryId().equals(id))
-        // .findFirst();
-        // if (optionalCategory.isPresent()) {
-        // Category existingCategory = optionalCategory.get();
-        // existingCategory.setCategoryName(category.getCategoryName());
-        // Category savedCategory = categoryRepository.save(existingCategory);
-        // return savedCategory;
-        // } else {
-        // throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not
-        // found!");
-        // }
     }
 }
