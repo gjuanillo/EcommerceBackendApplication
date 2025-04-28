@@ -2,6 +2,8 @@ package com.jeiyuen.ecommerce.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.service.CategoryService;
 
@@ -39,7 +41,7 @@ public class CategoryController {
 
     //Create a category
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@RequestBody Category category) {
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
         try {
         categoryService.createCategory(category);
         return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);

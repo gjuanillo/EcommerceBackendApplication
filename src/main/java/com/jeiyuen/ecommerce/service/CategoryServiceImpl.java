@@ -2,6 +2,7 @@ package com.jeiyuen.ecommerce.service;
 
 import java.util.List;
 
+import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.repository.CategoryRepository;
 
@@ -39,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
+            .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id)); 
         categoryRepository.delete(category);
         return "Category with categoryID: " + id + " deleted successfully!";
     }
@@ -48,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(Long id, Category category) {
         Category savedCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
         category.setCategoryId(id);
         savedCategory = categoryRepository.save(category);
         return savedCategory;
