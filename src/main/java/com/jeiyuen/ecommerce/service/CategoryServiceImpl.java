@@ -13,27 +13,27 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    //Save Categories to an Array temporarily
+    // Save Categories to an Array temporarily
     private List<Category> categories = new ArrayList<>();
     Long incrementID = 1L;
 
-    //Return list of categories
+    // Return list of categories
     @Override
     public List<Category> getAllCategories() {
         return categories;
     }
 
-    //Save Category
+    // Save Category
     @Override
     public void createCategory(Category category) {
-        if (category.getCategoryId() != null) {
-            throw new IllegalArgumentException("Category ID is generated, cannot assign ID");
+        if (category.getCategoryId() != null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "ID is automatically generated, cannot assign ID");
         }
         category.setCategoryId(incrementID++);
         categories.add(category);
     }
 
-    //Delete Category
+    // Delete Category
     @Override
     public String deleteCategory(Long id) {
         Category category = categories.stream()
@@ -44,17 +44,17 @@ public class CategoryServiceImpl implements CategoryService {
         return "Category with categoryID: " + id + " deleted successfully!";
     }
 
-    //Update Category
+    // Update Category
     @Override
     public Category updateCategory(Long id, Category category) {
         Optional<Category> optionalCategory = categories.stream()
                 .filter(c -> c.getCategoryId().equals(id))
                 .findFirst();
-        if(optionalCategory.isPresent()){
+        if (optionalCategory.isPresent()) {
             Category existingCategory = optionalCategory.get();
             existingCategory.setCategoryName(category.getCategoryName());
             return existingCategory;
-        }else{
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found!");
         }
     }
