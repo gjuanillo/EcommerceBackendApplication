@@ -2,14 +2,13 @@ package com.jeiyuen.ecommerce.service;
 
 import java.util.List;
 
+import com.jeiyuen.ecommerce.exceptions.ApiException;
 import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.repository.CategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -24,14 +23,22 @@ public class CategoryServiceImpl implements CategoryService {
     // Return list of categories
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        if (categories.isEmpty()){
+            throw new ApiException("Category List is empty!");
+        }
+        return categories;
     }
 
     // Save Category
     @Override
     public void createCategory(Category category) {
         if (category.getCategoryId() != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "ID is automatically generated, cannot assign ID");
+            throw new ApiException("Category ID is automatically genereated, cannot assign ID!");
+        }
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (savedCategory != null){
+            throw new ApiException("Category with the name " + category.getCategoryName() + " already exists!");
         }
         categoryRepository.save(category);
     }
