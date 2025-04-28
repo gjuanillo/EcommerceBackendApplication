@@ -1,7 +1,6 @@
 package com.jeiyuen.ecommerce.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.repository.CategoryRepository;
@@ -21,9 +20,10 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository theCategoryRepository){
+    public CategoryServiceImpl(CategoryRepository theCategoryRepository) {
         categoryRepository = theCategoryRepository;
     }
+
     // Return list of categories
     @Override
     public List<Category> getAllCategories() {
@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     // Save Category
     @Override
     public void createCategory(Category category) {
-        if (category.getCategoryId() != null){
+        if (category.getCategoryId() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "ID is automatically generated, cannot assign ID");
         }
         // category.setCategoryId(incrementID++);
@@ -43,11 +43,13 @@ public class CategoryServiceImpl implements CategoryService {
     // Delete Category
     @Override
     public String deleteCategory(Long id) {
-        List<Category> categories = categoryRepository.findAll();
-        Category category = categories.stream()
-                .filter(c -> c.getCategoryId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
+        // List<Category> categories = categoryRepository.findAll();
+        // Category category = categories.stream()
+        //         .filter(c -> c.getCategoryId().equals(id))
+        //         .findFirst()
+        //         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
         categoryRepository.delete(category);
         return "Category with categoryID: " + id + " deleted successfully!";
     }
@@ -55,17 +57,23 @@ public class CategoryServiceImpl implements CategoryService {
     // Update Category
     @Override
     public Category updateCategory(Long id, Category category) {
-        List<Category> categories = categoryRepository.findAll();
-        Optional<Category> optionalCategory = categories.stream()
-                .filter(c -> c.getCategoryId().equals(id))
-                .findFirst();
-        if (optionalCategory.isPresent()) {
-            Category existingCategory = optionalCategory.get();
-            existingCategory.setCategoryName(category.getCategoryName());
-            Category savedCategory = categoryRepository.save(existingCategory);
-            return savedCategory;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found!");
-        }
+        Category savedCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found!"));
+        category.setCategoryId(id);
+        savedCategory = categoryRepository.save(category);
+        return savedCategory;
+        // List<Category> categories = categoryRepository.findAll();
+        // Optional<Category> optionalCategory = categories.stream()
+        // .filter(c -> c.getCategoryId().equals(id))
+        // .findFirst();
+        // if (optionalCategory.isPresent()) {
+        // Category existingCategory = optionalCategory.get();
+        // existingCategory.setCategoryName(category.getCategoryName());
+        // Category savedCategory = categoryRepository.save(existingCategory);
+        // return savedCategory;
+        // } else {
+        // throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not
+        // found!");
+        // }
     }
 }
