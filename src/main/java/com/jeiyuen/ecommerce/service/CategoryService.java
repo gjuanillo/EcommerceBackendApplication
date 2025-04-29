@@ -1,16 +1,15 @@
 package com.jeiyuen.ecommerce.service;
 
-import java.util.List;
-
-import com.jeiyuen.ecommerce.model.Category;
+import com.jeiyuen.ecommerce.payload.CategoryDTO;
+import com.jeiyuen.ecommerce.payload.CategoryResponse;
 
 public interface CategoryService{
     //Retrieve all categories
-    List<Category> getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
     //Save category
-    void createCategory(Category category);
+    CategoryDTO createCategory(CategoryDTO dto);
     //Delete category by id
-    String deleteCategory(Long id);
+    CategoryDTO deleteCategory(Long id);
     //Update category by id
-    Category updateCategory(Long id, Category category);
+    CategoryDTO updateCategory(Long id, CategoryDTO dto);
 }
