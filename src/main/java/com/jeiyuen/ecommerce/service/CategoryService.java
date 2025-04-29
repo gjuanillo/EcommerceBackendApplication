@@ -5,7 +5,7 @@ import com.jeiyuen.ecommerce.payload.CategoryResponse;
 
 public interface CategoryService{
     //Retrieve all categories
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
     //Save category
     CategoryDTO createCategory(CategoryDTO dto);
     //Delete category by id

@@ -2,6 +2,7 @@ package com.jeiyuen.ecommerce.controller;
 
 import jakarta.validation.Valid;
 
+import com.jeiyuen.ecommerce.config.AppConstants;
 import com.jeiyuen.ecommerce.payload.CategoryDTO;
 import com.jeiyuen.ecommerce.payload.CategoryResponse;
 import com.jeiyuen.ecommerce.service.CategoryService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,8 +34,13 @@ public class CategoryController {
 
     // List all categories
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories() {
-        CategoryResponse categoryResponse = categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder
+            ) {
+        CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
