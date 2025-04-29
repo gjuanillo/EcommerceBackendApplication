@@ -2,7 +2,7 @@ package com.jeiyuen.ecommerce.controller;
 
 import jakarta.validation.Valid;
 
-import com.jeiyuen.ecommerce.model.Category;
+import com.jeiyuen.ecommerce.payload.CategoryDTO;
 import com.jeiyuen.ecommerce.payload.CategoryResponse;
 import com.jeiyuen.ecommerce.service.CategoryService;
 
@@ -39,22 +39,23 @@ public class CategoryController {
 
     // Create a category
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
-        categoryService.createCategory(category);
-        return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO dto) {
+        CategoryDTO savedCategory = categoryService.createCategory(dto);
+        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
     // Delete a category by id
     @DeleteMapping("/admin/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id) {
-        String status = categoryService.deleteCategory(id);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable("id") Long id) {
+        CategoryDTO deletedCategory = categoryService.deleteCategory(id);
+        return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
     }
 
     // Update a category by id
     @PutMapping("/public/categories/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable("id") Long id, @Valid @RequestBody Category category) {
-        categoryService.updateCategory(id, category);
-        return new ResponseEntity<>("Category saved with ID: " + id, HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") Long id,
+            @Valid @RequestBody CategoryDTO dto) {
+        CategoryDTO updatedCategory = categoryService.updateCategory(id, dto);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 }

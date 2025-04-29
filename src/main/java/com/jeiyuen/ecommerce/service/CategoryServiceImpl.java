@@ -29,12 +29,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        if (categories.isEmpty()){
+        if (categories.isEmpty()) {
             throw new ApiException("Category List is empty!");
         }
         List<CategoryDTO> categoryDTOs = categories.stream()
-            .map(category -> modelMapper.map(category, CategoryDTO.class))
-            .toList();
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setContent(categoryDTOs);
         return categoryResponse;
@@ -42,33 +42,37 @@ public class CategoryServiceImpl implements CategoryService {
 
     // Save Category
     @Override
-    public void createCategory(Category category) {
-        if (category.getCategoryId() != null) {
+    public CategoryDTO createCategory(CategoryDTO dto) {
+        if (dto.getCategoryId() != null) {
             throw new ApiException("Category ID is automatically genereated, cannot assign ID!");
         }
-        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
-        if (savedCategory != null){
-            throw new ApiException("Category with the name " + category.getCategoryName() + " already exists!");
+        Category category = modelMapper.map(dto, Category.class);
+        Category categoryFromDb = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (categoryFromDb != null) {
+            throw new ApiException("Category with the name " + dto.getCategoryName() + " already exists!");
         }
-        categoryRepository.save(category);
+
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     // Delete Category
     @Override
-    public String deleteCategory(Long id) {
+    public CategoryDTO deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id)); 
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
         categoryRepository.delete(category);
-        return "Category with categoryID: " + id + " deleted successfully!";
+        return modelMapper.map(category, CategoryDTO.class);
     }
 
     // Update Category
     @Override
-    public Category updateCategory(Long id, Category category) {
+    public CategoryDTO updateCategory(Long id, CategoryDTO dto) {
         Category savedCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", id));
+        Category category = modelMapper.map(dto, Category.class);
         category.setCategoryId(id);
         savedCategory = categoryRepository.save(category);
-        return savedCategory;
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 }
