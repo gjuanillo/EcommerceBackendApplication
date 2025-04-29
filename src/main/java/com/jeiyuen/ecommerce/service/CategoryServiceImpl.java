@@ -5,8 +5,11 @@ import java.util.List;
 import com.jeiyuen.ecommerce.exceptions.ApiException;
 import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Category;
+import com.jeiyuen.ecommerce.payload.CategoryDTO;
+import com.jeiyuen.ecommerce.payload.CategoryResponse;
 import com.jeiyuen.ecommerce.repository.CategoryRepository;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +17,27 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
 
     private CategoryRepository categoryRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository theCategoryRepository) {
+    public CategoryServiceImpl(CategoryRepository theCategoryRepository, ModelMapper theModelMapper) {
         categoryRepository = theCategoryRepository;
+        modelMapper = theModelMapper;
     }
 
     // Return list of categories
     @Override
-    public List<Category> getAllCategories() {
+    public CategoryResponse getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         if (categories.isEmpty()){
             throw new ApiException("Category List is empty!");
         }
-        return categories;
+        List<CategoryDTO> categoryDTOs = categories.stream()
+            .map(category -> modelMapper.map(category, CategoryDTO.class))
+            .toList();
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setContent(categoryDTOs);
+        return categoryResponse;
     }
 
     // Save Category

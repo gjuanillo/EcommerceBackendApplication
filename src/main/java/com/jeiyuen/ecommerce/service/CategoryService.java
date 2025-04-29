@@ -1,12 +1,11 @@
 package com.jeiyuen.ecommerce.service;
 
-import java.util.List;
-
 import com.jeiyuen.ecommerce.model.Category;
+import com.jeiyuen.ecommerce.payload.CategoryResponse;
 
 public interface CategoryService{
     //Retrieve all categories
-    List<Category> getAllCategories();
+    CategoryResponse getAllCategories();
     //Save category
     void createCategory(Category category);
     //Delete category by id

@@ -1,10 +1,9 @@
 package com.jeiyuen.ecommerce.controller;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 
 import com.jeiyuen.ecommerce.model.Category;
+import com.jeiyuen.ecommerce.payload.CategoryResponse;
 import com.jeiyuen.ecommerce.service.CategoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,9 @@ public class CategoryController {
 
     // List all categories
     @GetMapping("/public/categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories() {
+        CategoryResponse categoryResponse = categoryService.getAllCategories();
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     // Create a category
