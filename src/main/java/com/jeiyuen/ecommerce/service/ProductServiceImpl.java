@@ -1,9 +1,12 @@
 package com.jeiyuen.ecommerce.service;
 
+import java.util.List;
+
 import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.model.Product;
 import com.jeiyuen.ecommerce.payload.ProductDTO;
+import com.jeiyuen.ecommerce.payload.ProductResponse;
 import com.jeiyuen.ecommerce.repository.CategoryRepository;
 import com.jeiyuen.ecommerce.repository.ProductRepository;
 
@@ -35,6 +38,17 @@ public class ProductServiceImpl implements ProductService{
         product.setSpecialPrice(specialPrice);
         Product savedProduct = productRepository.save(product);
         return modelMapper.map(savedProduct, ProductDTO.class);
+    }
+
+    @Override
+    public ProductResponse getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTOs = products.stream()
+            .map(product -> modelMapper.map(product, ProductDTO.class))
+            .toList();
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOs);
+        return productResponse;
     }
 
 }
