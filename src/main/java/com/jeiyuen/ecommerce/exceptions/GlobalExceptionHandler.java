@@ -15,26 +15,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Handle thrown Invalid Method Argument
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
         Map<String, String> response = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach(err -> {
-            String fieldName = ((FieldError)err).getField();
+            String fieldName = ((FieldError) err).getField();
             String message = err.getDefaultMessage();
             response.put(fieldName, message);
         });
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    // Handle thrown Resource Not Found Exception
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<APIResponse> handleResourceNotFoundException(ResourceNotFoundException e){
+    public ResponseEntity<APIResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
         String message = e.getMessage();
         APIResponse apiResponse = new APIResponse(message, false);
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+    // Handle thrown API Response Exception
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<APIResponse> handleApiException(ApiException e){
+    public ResponseEntity<APIResponse> handleApiException(ApiException e) {
         String message = e.getMessage();
         APIResponse apiResponse = new APIResponse(message, false);
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
