@@ -18,9 +18,13 @@ public class Product {
 
     private String description;
     
+    private String image;
+
     private Integer quantity;
 
     private double price;
+
+    private double discount;
 
     private double specialPrice;
 
@@ -66,6 +70,14 @@ public class Product {
         this.description = description;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -80,6 +92,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     public double getSpecialPrice() {
@@ -97,5 +117,6 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
+
 
 }
