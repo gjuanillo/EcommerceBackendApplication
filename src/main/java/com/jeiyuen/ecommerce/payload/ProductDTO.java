@@ -1,6 +1,6 @@
 package com.jeiyuen.ecommerce.payload;
 
-public class ProductDTO{
+public class ProductDTO {
 
     private Long productId;
     private String productName;

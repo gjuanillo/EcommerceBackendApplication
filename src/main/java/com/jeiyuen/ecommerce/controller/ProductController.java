@@ -16,25 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class ProductController{
+public class ProductController {
 
+    // Inject productService as dependency
     ProductService productService;
 
-    public ProductController (ProductService productService){
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping("/admin/categories/{categoryId}/product")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody Product product, @PathVariable("categoryId") Long categoryId){
-        
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody Product product,
+            @PathVariable("categoryId") Long categoryId) {
+
         ProductDTO productDTO = productService.addProduct(categoryId, product);
         return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
     }
-    
+
     @GetMapping("/public/products")
-    public ResponseEntity<ProductResponse> getAllProducts(){
-       ProductResponse productResponse = productService.getAllProducts(); 
-       return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    public ResponseEntity<ProductResponse> getAllProducts() {
+        ProductResponse productResponse = productService.getAllProducts();
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
 
     }
 }

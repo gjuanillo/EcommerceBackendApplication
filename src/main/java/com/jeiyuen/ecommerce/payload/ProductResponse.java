@@ -2,7 +2,7 @@ package com.jeiyuen.ecommerce.payload;
 
 import java.util.List;
 
-public class ProductResponse{
+public class ProductResponse {
 
     private List<ProductDTO> content;
 

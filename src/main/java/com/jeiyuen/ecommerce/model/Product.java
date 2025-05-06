@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Product {
 
+    // Define Fields
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long productId;
@@ -17,7 +18,7 @@ public class Product {
     private String productName;
 
     private String description;
-    
+
     private String image;
 
     private Integer quantity;
@@ -28,10 +29,12 @@ public class Product {
 
     private double specialPrice;
 
+    // Relate product entity to category entity
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    // Constructors
     public Product() {
     }
 
@@ -46,6 +49,7 @@ public class Product {
         this.category = category;
     }
 
+    // Getters and Setters
     public Long getProductId() {
         return productId;
     }
@@ -117,6 +121,5 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
-
 
 }

@@ -1,12 +1,14 @@
 package com.jeiyuen.ecommerce.exceptions;
 
-public class ResourceNotFoundException extends RuntimeException{
+//Custom Exception for handling when resource is not found
+public class ResourceNotFoundException extends RuntimeException {
     String resourceName;
     String field;
     String fieldName;
     Long fieldId;
-  
-    public ResourceNotFoundException(){}
+
+    public ResourceNotFoundException() {
+    }
 
     public ResourceNotFoundException(String resourceName, String field, String fieldName) {
         super(String.format("%s not found with %s: %s", resourceName, field, fieldName));
@@ -22,5 +24,4 @@ public class ResourceNotFoundException extends RuntimeException{
         this.fieldId = fieldId;
     }
 
-    
 }
