@@ -20,4 +20,7 @@ public interface ProductService {
 
     // Update product details
     ProductDTO updateProduct(Long productId, Product product);
+
+    // delete a product
+    ProductDTO deleteProduct(Long productId);
 }
