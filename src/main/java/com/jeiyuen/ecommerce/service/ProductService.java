@@ -17,4 +17,7 @@ public interface ProductService {
 
     // List all products based on keyword
     ProductResponse searchProductByKeyword(String keyword);
+
+    // Update product details
+    ProductDTO updateProduct(Long productId, Product product);
 }
