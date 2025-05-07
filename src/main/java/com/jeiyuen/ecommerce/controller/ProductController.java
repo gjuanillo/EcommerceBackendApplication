@@ -25,13 +25,30 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // Get all products
+    @GetMapping("/public/products")
+    public ResponseEntity<ProductResponse> getAllProducts() {
+        ProductResponse productResponse = productService.getAllProducts();
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+
+    }
+
+    // Get products by Category
     @GetMapping("/public/categories/{categoryId}/products")
-    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable("categoryId") Long categoryId){
+    public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable("categoryId") Long categoryId) {
 
         ProductResponse productResponse = productService.searchByCategory(categoryId);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+    // Get products by Keyword
+    @GetMapping("/public/products/keyword/{keyword}")
+    public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable("keyword") String keyword) {
+        ProductResponse productResponse = productService.searchProductByKeyword(keyword);
+        return new ResponseEntity<>(productResponse, HttpStatus.FOUND);
+    }
+
+    // Add product
     @PostMapping("/admin/categories/{categoryId}/products")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody Product product,
             @PathVariable("categoryId") Long categoryId) {
@@ -40,10 +57,4 @@ public class ProductController {
         return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/products")
-    public ResponseEntity<ProductResponse> getAllProducts() {
-        ProductResponse productResponse = productService.getAllProducts();
-        return new ResponseEntity<>(productResponse, HttpStatus.OK);
-
-    }
 }

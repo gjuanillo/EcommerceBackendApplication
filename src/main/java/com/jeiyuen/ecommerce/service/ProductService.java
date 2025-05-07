@@ -12,5 +12,9 @@ public interface ProductService {
     // List all products
     ProductResponse getAllProducts();
 
+    // List all products on a defined category
     ProductResponse searchByCategory(Long categoryId);
+
+    // List all products based on keyword
+    ProductResponse searchProductByKeyword(String keyword);
 }
