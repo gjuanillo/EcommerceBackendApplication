@@ -31,10 +31,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO addProduct(Long categoryId, Product product) {
+    public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         // Find id
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        // Map DTO into entity
+        Product product = modelMapper.map(productDTO, Product.class);
         // Set image to default
         product.setImage("default.png");
         product.setCategory(category);
@@ -87,9 +89,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(Long productId, Product product) {
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
         Product savedProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        // Map DTO into entity
+        Product product = modelMapper.map(productDTO, Product.class);
         // Update product if found
         savedProduct.setProductName(product.getProductName());
         savedProduct.setDescription(product.getDescription());

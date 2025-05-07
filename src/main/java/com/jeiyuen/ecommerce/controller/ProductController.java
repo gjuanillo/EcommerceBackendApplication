@@ -1,6 +1,5 @@
 package com.jeiyuen.ecommerce.controller;
 
-import com.jeiyuen.ecommerce.model.Product;
 import com.jeiyuen.ecommerce.payload.ProductDTO;
 import com.jeiyuen.ecommerce.payload.ProductResponse;
 import com.jeiyuen.ecommerce.service.ProductService;
@@ -52,24 +51,23 @@ public class ProductController {
 
     // Add product
     @PostMapping("/admin/categories/{categoryId}/products")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody Product product,
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO,
             @PathVariable("categoryId") Long categoryId) {
-
-        ProductDTO productDTO = productService.addProduct(categoryId, product);
-        return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
+        ProductDTO savedProductDTO = productService.addProduct(categoryId, productDTO);
+        return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
     }
 
     // Update a product
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("productId") Long productId,
-            @RequestBody Product product) {
-        ProductDTO productDTO = productService.updateProduct(productId, product);
+            @RequestBody ProductDTO productDTO) {
+        ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
     // Delete a product
     @DeleteMapping("/admin/products/{productId}")
-    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("productId") Long productId){
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("productId") Long productId) {
         ProductDTO productDTO = productService.deleteProduct(productId);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
