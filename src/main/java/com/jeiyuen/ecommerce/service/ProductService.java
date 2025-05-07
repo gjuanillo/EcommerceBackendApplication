@@ -1,7 +1,11 @@
 package com.jeiyuen.ecommerce.service;
 
+import java.io.IOException;
+
 import com.jeiyuen.ecommerce.payload.ProductDTO;
 import com.jeiyuen.ecommerce.payload.ProductResponse;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService {
 
@@ -20,6 +24,9 @@ public interface ProductService {
     // Update product details
     ProductDTO updateProduct(Long productId, ProductDTO product);
 
-    // delete a product
+    // Delete a product
     ProductDTO deleteProduct(Long productId);
+
+    // Update product image
+    ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }

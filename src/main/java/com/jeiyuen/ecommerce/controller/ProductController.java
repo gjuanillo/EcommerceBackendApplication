@@ -1,5 +1,7 @@
 package com.jeiyuen.ecommerce.controller;
 
+import java.io.IOException;
+
 import com.jeiyuen.ecommerce.payload.ProductDTO;
 import com.jeiyuen.ecommerce.payload.ProductResponse;
 import com.jeiyuen.ecommerce.service.ProductService;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -62,7 +66,7 @@ public class ProductController {
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("productId") Long productId,
             @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
-        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
     }
 
     // Delete a product
@@ -72,4 +76,11 @@ public class ProductController {
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
+    @PutMapping("/products/{productId}/image")
+    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable("productId") Long productId,
+            @RequestParam("image") MultipartFile image) throws IOException {
+            ProductDTO updatedProduct = productService.updateProductImage(productId, image);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+
+    }
 }
