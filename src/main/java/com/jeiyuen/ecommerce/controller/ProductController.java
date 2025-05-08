@@ -2,6 +2,8 @@ package com.jeiyuen.ecommerce.controller;
 
 import java.io.IOException;
 
+import jakarta.validation.Valid;
+
 import com.jeiyuen.ecommerce.payload.ProductDTO;
 import com.jeiyuen.ecommerce.payload.ProductResponse;
 import com.jeiyuen.ecommerce.service.ProductService;
@@ -55,7 +57,7 @@ public class ProductController {
 
     // Add product
     @PostMapping("/admin/categories/{categoryId}/products")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO,
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO,
             @PathVariable("categoryId") Long categoryId) {
         ProductDTO savedProductDTO = productService.addProduct(categoryId, productDTO);
         return new ResponseEntity<>(savedProductDTO, HttpStatus.CREATED);
@@ -64,7 +66,7 @@ public class ProductController {
     // Update a product
     @PutMapping("/admin/products/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("productId") Long productId,
-            @RequestBody ProductDTO productDTO) {
+            @Valid @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(productId, productDTO);
         return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
     }

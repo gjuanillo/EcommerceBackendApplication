@@ -3,6 +3,7 @@ package com.jeiyuen.ecommerce.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.jeiyuen.ecommerce.exceptions.ApiException;
 import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Category;
 import com.jeiyuen.ecommerce.model.Product;
@@ -39,11 +40,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
+        // Check if user included Id in the DTO
+        if (productDTO.getProductId() != null){
+            throw new ApiException("Product ID is automatically generated, cannot assign ID!");
+        }
         // Find id
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         // Map DTO into entity
         Product product = modelMapper.map(productDTO, Product.class);
+        // Check if the product already exist 
+        boolean isProductPresent = false;
+        List<Product> products = category.getProducts();
+        for (Product value : products){
+            if (value.getProductName().equals(productDTO.getProductName())){
+                isProductPresent = true;
+                break;
+            }
+        }
+        if (isProductPresent) {
+            throw new ApiException("Product with the name " + productDTO.getProductName() + " already exists!");
+        }
         // Set image to default
         product.setImage("default.png");
         product.setCategory(category);
@@ -57,6 +74,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getAllProducts() {
         List<Product> products = productRepository.findAll();
+        // Check if list of products is empty
+        if (products.isEmpty()){
+            throw new ApiException("Product list is empty!");
+        }
         // convert each products into DTO by using stream
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
@@ -72,6 +93,10 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
+        // Check if list of products is empty
+        if (products.isEmpty()){
+            throw new ApiException("Product list is empty!");
+        }
         // convert each products into DTO by using stream
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
@@ -86,6 +111,10 @@ public class ProductServiceImpl implements ProductService {
         // Find product by keyword
         List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%'); // pattern
                                                                                                          // matching
+        // Check if list of products is empty
+        if (products.isEmpty()){
+            throw new ApiException("Product list is empty!");
+        }
         // convert each products into DTO by using stream
         List<ProductDTO> productDTOs = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
