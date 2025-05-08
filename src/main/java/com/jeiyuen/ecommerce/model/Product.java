@@ -1,5 +1,7 @@
 package com.jeiyuen.ecommerce.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -120,6 +122,40 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId, productName, description, image, quantity, price, discount, specialPrice,
+                category);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Product other = (Product) obj;
+        return Objects.equals(productId, other.productId) && Objects.equals(productName, other.productName)
+                && Objects.equals(description, other.description) && Objects.equals(image, other.image)
+                && Objects.equals(quantity, other.quantity)
+                && Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
+                && Double.doubleToLongBits(discount) == Double.doubleToLongBits(other.discount)
+                && Double.doubleToLongBits(specialPrice) == Double.doubleToLongBits(other.specialPrice)
+                && Objects.equals(category, other.category);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{productId=" + productId + ", productName=" + productName + ", description=" + description
+                + ", image=" + image + ", quantity=" + quantity + ", price=" + price + ", discount=" + discount
+                + ", specialPrice=" + specialPrice + ", category=" + category + "}";
     }
 
 }
