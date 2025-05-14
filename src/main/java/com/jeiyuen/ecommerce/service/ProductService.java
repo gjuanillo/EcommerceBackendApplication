@@ -16,10 +16,12 @@ public interface ProductService {
     ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     // List all products on a defined category
-    ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
+            String sortOrder);
 
     // List all products based on keyword
-    ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
+            String sortOrder);
 
     // Update product details
     ProductDTO updateProduct(Long productId, ProductDTO product);

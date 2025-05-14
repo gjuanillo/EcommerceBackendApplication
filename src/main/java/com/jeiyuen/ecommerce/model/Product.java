@@ -8,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     // Define Fields
@@ -36,19 +38,26 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User user;
+
     // Constructors
     public Product() {
     }
 
-    public Product(Long productId, String productName, String description, Integer quantity, double price,
-            double specialPrice, Category category) {
+    public Product(Long productId, String productName, String description, String image, Integer quantity, double price,
+            double discount, double specialPrice, Category category, User user) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
+        this.image = image;
         this.quantity = quantity;
         this.price = price;
+        this.discount = discount;
         this.specialPrice = specialPrice;
         this.category = category;
+        this.user = user;
     }
 
     // Getters and Setters
@@ -122,6 +131,14 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
