@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "roles")
-public class Role{
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,11 @@ public class Role{
     }
 
     public Role(SystemRole roleName) {
+        this.roleName = roleName;
+    }
+
+    public Role(Integer roleId, SystemRole roleName) {
+        this.roleId = roleId;
         this.roleName = roleName;
     }
 
@@ -66,5 +71,10 @@ public class Role{
         Role other = (Role) obj;
         return Objects.equals(roleId, other.roleId) && roleName == other.roleName;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Role{roleId=" + roleId + "}";
+    }
+
 }

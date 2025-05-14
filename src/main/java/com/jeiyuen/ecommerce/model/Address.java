@@ -15,29 +15,29 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "addresses")
-public class Address{
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="address_id")
+    @Column(name = "address_id")
     private Long addressId;
 
     @NotBlank
     @Size(min = 3, message = "Street name must be at least 3 characters!")
-    private String street; 
+    private String street;
 
     @NotBlank
     @Size(min = 3, message = "Building name must be at least 3 characters!")
     private String buildingName;
-    
+
     @NotBlank
     @Size(min = 3, message = "City name must be at least 3 characters!")
     private String cityName;
-    
+
     @NotBlank
     @Size(min = 3, message = "State must be at least 3 characters!")
     private String state;
-    
+
     @NotBlank
     @Size(min = 3, message = "Country must be at least 3 characters!")
     private String country;
@@ -128,6 +128,12 @@ public class Address{
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{addressId=" + addressId + ", street=" + street + ", buildingName=" + buildingName
+                + ", cityName=" + cityName + ", state=" + state + ", country=" + country + ", zipCode=" + zipCode + "}";
     }
 
 }

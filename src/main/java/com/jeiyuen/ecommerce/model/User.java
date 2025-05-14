@@ -56,8 +56,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private Set<Product> products;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "user_address", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"))
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Address> addresses = new ArrayList<>();
 
     public User() {
@@ -137,6 +137,12 @@ public class User {
         return Objects.equals(userId, other.userId) && Objects.equals(userName, other.userName)
                 && Objects.equals(email, other.email) && Objects.equals(password, other.password)
                 && Objects.equals(roles, other.roles);
+    }
+
+    @Override
+    public String toString() {
+        return "User{userId=" + userId + ", userName=" + userName + ", email=" + email + ", password=" + password
+                + ", roles=" + roles + ", addresses=" + addresses + "}";
     }
 
 }

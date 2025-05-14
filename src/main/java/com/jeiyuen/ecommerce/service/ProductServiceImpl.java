@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
         // Check if user included Id in the DTO
-        if (productDTO.getProductId() != null){
+        if (productDTO.getProductId() != null) {
             throw new ApiException("Product ID is automatically generated, cannot assign ID!");
         }
         // Find id
@@ -53,11 +53,11 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         // Map DTO into entity
         Product product = modelMapper.map(productDTO, Product.class);
-        // Check if the product already exist 
+        // Check if the product already exist
         boolean isProductPresent = false;
         List<Product> products = category.getProducts();
-        for (Product value : products){
-            if (value.getProductName().equals(productDTO.getProductName())){
+        for (Product value : products) {
+            if (value.getProductName().equals(productDTO.getProductName())) {
                 isProductPresent = true;
                 break;
             }
@@ -77,12 +77,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByandOrder);
         Page<Product> productPage = productRepository.findAll(pageDetails);
         List<Product> products = productPage.getContent();
         // Check if list of products is empty
-        if (products.isEmpty()){
+        if (products.isEmpty()) {
             throw new ApiException("Product list is empty!");
         }
         // convert each products into DTO by using stream
@@ -100,16 +101,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
+            String sortOrder) {
         // Find category id
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByandOrder);
         Page<Product> productPage = productRepository.findByCategory(category, pageDetails);
         List<Product> products = productPage.getContent();
         // Check if list of products is empty
-        if (products.isEmpty()){
+        if (products.isEmpty()) {
             throw new ApiException("Product list is empty!");
         }
         // convert each products into DTO by using stream
@@ -127,14 +130,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    public ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
+            String sortOrder) {
+        Sort sortByandOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByandOrder);
         Page<Product> productPage = productRepository.findByProductNameContainingIgnoreCase(keyword, pageDetails);
         // Find product by keyword
         List<Product> products = productPage.getContent();
         // Check if list of products is empty
-        if (products.isEmpty()){
+        if (products.isEmpty()) {
             throw new ApiException("Product list is empty!");
         }
         // convert each products into DTO by using stream

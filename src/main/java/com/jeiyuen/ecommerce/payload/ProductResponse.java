@@ -72,5 +72,4 @@ public class ProductResponse {
         this.lastPage = lastPage;
     }
 
-
 }
