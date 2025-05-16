@@ -78,11 +78,11 @@ public class WebSecurityConfig {
                         // TODO use swagger for API documentation
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        // public endpoints
+                        // Public endpoints
                         .requestMatchers("/api/public/**").permitAll()
                         // Change this after dev
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/api/admin/**").permitAll()
+                        // .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .anyRequest()
                         .authenticated());
