@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,5 +124,24 @@ public class AuthController {
        user.setRoles(roles);
        userRepository.save(user);
         return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.OK);
+    }
+
+    @GetMapping("/username")
+    public String currentUserName(Authentication authentication){
+        if (authentication != null){
+            return authentication.getName();
+        } else {
+            return "";
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserInfoResponse> getUserDetails(Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+        UserInfoResponse response = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(),
+                roles);
+        return ResponseEntity.ok().body(response);
     }
 }
