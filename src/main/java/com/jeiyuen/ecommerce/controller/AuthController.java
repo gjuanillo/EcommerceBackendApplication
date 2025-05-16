@@ -105,30 +105,37 @@ public class AuthController {
                 switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByRoleName(SystemRole.ROLE_ADMIN)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
                         roles.add(adminRole);
                         break;
                     case "seller":
                         Role sellerRole = roleRepository.findByRoleName(SystemRole.ROLE_SELLER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
                         roles.add(sellerRole);
                         break;
                     default:
                         Role userRole = roleRepository.findByRoleName(SystemRole.ROLE_USER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
                         roles.add(userRole);
                         break;
                 }
             });
         }
-       user.setRoles(roles);
-       userRepository.save(user);
+        user.setRoles(roles);
+        userRepository.save(user);
         return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.OK);
     }
 
+    @PostMapping("/signout")
+    public ResponseEntity<?> signoutUser() {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtUtils.cleanJwtCookie().toString())
+                .body(new MessageResponse("User signed out successfully."));
+    }
+
     @GetMapping("/username")
-    public String currentUserName(Authentication authentication){
-        if (authentication != null){
+    public String currentUserName(Authentication authentication) {
+        if (authentication != null) {
             return authentication.getName();
         } else {
             return "";
@@ -136,7 +143,7 @@ public class AuthController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserInfoResponse> getUserDetails(Authentication authentication){
+    public ResponseEntity<UserInfoResponse> getUserDetails(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());

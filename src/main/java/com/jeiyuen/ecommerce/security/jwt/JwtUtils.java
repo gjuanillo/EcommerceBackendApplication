@@ -45,6 +45,14 @@ public class JwtUtils {
         }
     }
 
+    // Opposite to generating cookie, clear cookies by setting cookie to null instead of passing out the token 
+    public ResponseCookie cleanJwtCookie() {
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
+                .path("/api")
+                .build();
+        return cookie;
+    }
+
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenfromUsername(userPrincipal.getUsername());
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
