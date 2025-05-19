@@ -1,18 +1,22 @@
 package com.jeiyuen.ecommerce.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="carts")
-public class Cart{
+@Table(name = "carts")
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +26,19 @@ public class Cart{
     @JoinColumn(name = "user_id")
     private User user;
 
-    // @OneToMany(mappedBy = "cart", cascade = pmr, orphanRemoval)
-    // private List<CartItem> cartItems = new ArrayList<>();
-    
+    @OneToMany(mappedBy = "cart", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REMOVE}, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();
+
     private Double totalPrice = 0.0;
 
     public Cart() {
     }
 
-    public Cart(Long cartId, User user, Double totalPrice) {
+    public Cart(Long cartId, User user, List<CartItem> cartItems, Double totalPrice) {
         this.cartId = cartId;
         this.user = user;
+        this.cartItems = cartItems;
         this.totalPrice = totalPrice;
     }
 
@@ -52,6 +58,14 @@ public class Cart{
         this.user = user;
     }
 
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     public Double getTotalPrice() {
         return totalPrice;
     }
@@ -62,7 +76,7 @@ public class Cart{
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartId, user, totalPrice);
+        return Objects.hash(cartId, user, cartItems, totalPrice);
     }
 
     @Override
@@ -78,12 +92,13 @@ public class Cart{
         }
         Cart other = (Cart) obj;
         return Objects.equals(cartId, other.cartId) && Objects.equals(user, other.user)
-                && Objects.equals(totalPrice, other.totalPrice);
+                && Objects.equals(cartItems, other.cartItems) && Objects.equals(totalPrice, other.totalPrice);
     }
 
     @Override
     public String toString() {
-        return "Cart{cartId=" + cartId + ", user=" + user + ", totalPrice=" + totalPrice + "}";
+        return "Cart{cartId=" + cartId + ", user=" + user + ", cartItems=" + cartItems + ", totalPrice=" + totalPrice
+                + "}";
     }
 
 }
