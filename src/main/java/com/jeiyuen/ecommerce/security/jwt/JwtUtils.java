@@ -45,7 +45,8 @@ public class JwtUtils {
         }
     }
 
-    // Opposite to generating cookie, clear cookies by setting cookie to null instead of passing out the token 
+    // Opposite to generating cookie, clear cookies by setting cookie to null
+    // instead of passing out the token
     public ResponseCookie cleanJwtCookie() {
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
                 .path("/api")
@@ -88,6 +89,11 @@ public class JwtUtils {
 
     // Validate JWT
     public boolean validateJwtToken(String authToken) {
+        // Returns false immediately if null (this way, log in/sign up does not clutter logs with unnecessary error message)
+        if (authToken == null || authToken.trim().isEmpty()) {
+            logger.debug("No JWT token present in request.");
+            return false;
+        }
         try {
             // System.out.println("Validate");
             Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);

@@ -76,7 +76,7 @@ public class AuthController {
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-        UserInfoResponse response = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(),
+        UserInfoResponse response = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(),
                 roles);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
     }
@@ -147,7 +147,7 @@ public class AuthController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-        UserInfoResponse response = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(),
+        UserInfoResponse response = new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(),
                 roles);
         return ResponseEntity.ok().body(response);
     }
