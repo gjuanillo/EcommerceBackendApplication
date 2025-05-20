@@ -1,6 +1,7 @@
 package com.jeiyuen.ecommerce.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.jeiyuen.ecommerce.exceptions.ApiException;
@@ -99,6 +100,32 @@ public class CartServiceImpl implements CartService {
         cartDTO.setProducts(productDTOStream.toList());
         return cartDTO;
 
+    }
+
+    @Override
+    public List<CartDTO> getAllCarts() {
+        // Find all carts
+        List<Cart> carts = cartRepository.findAll();
+        
+        if (carts.isEmpty()) {
+            throw new ApiException("No Cart Exist!");
+        }
+
+        // Convert list to DTO
+        List<CartDTO> cartDTOs = carts.stream()
+            .map(cart -> {
+                CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+
+                // List of products are also needed in CartDTO
+                List<ProductDTO> products = cart.getCartItems().stream()
+                    .map(product -> modelMapper.map(product.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+                
+                // Set the mapped products
+                cartDTO.setProducts(products);
+
+                return cartDTO;
+            }).collect(Collectors.toList());
+        return cartDTOs;
     }
 
 }
