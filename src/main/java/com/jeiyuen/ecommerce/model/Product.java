@@ -1,13 +1,18 @@
 package com.jeiyuen.ecommerce.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -42,12 +47,15 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private User user;
 
+    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    private List<CartItem> products = new ArrayList<>();
+
     // Constructors
     public Product() {
     }
 
     public Product(Long productId, String productName, String description, String image, Integer quantity, double price,
-            double discount, double specialPrice, Category category, User user) {
+            double discount, double specialPrice, Category category, User user, List<CartItem> products) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
@@ -58,6 +66,7 @@ public class Product {
         this.specialPrice = specialPrice;
         this.category = category;
         this.user = user;
+        this.products = products;
     }
 
     // Getters and Setters
@@ -141,10 +150,18 @@ public class Product {
         this.user = user;
     }
 
+    public List<CartItem> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<CartItem> products) {
+        this.products = products;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(productId, productName, description, image, quantity, price, discount, specialPrice,
-                category);
+                category, user, products);
     }
 
     @Override
@@ -165,14 +182,16 @@ public class Product {
                 && Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
                 && Double.doubleToLongBits(discount) == Double.doubleToLongBits(other.discount)
                 && Double.doubleToLongBits(specialPrice) == Double.doubleToLongBits(other.specialPrice)
-                && Objects.equals(category, other.category);
+                && Objects.equals(category, other.category) && Objects.equals(user, other.user)
+                && Objects.equals(products, other.products);
     }
 
     @Override
     public String toString() {
         return "Product{productId=" + productId + ", productName=" + productName + ", description=" + description
                 + ", image=" + image + ", quantity=" + quantity + ", price=" + price + ", discount=" + discount
-                + ", specialPrice=" + specialPrice + ", category=" + category + "}";
+                + ", specialPrice=" + specialPrice + ", category=" + category + ", user=" + user + ", products="
+                + products + "}";
     }
 
 }
