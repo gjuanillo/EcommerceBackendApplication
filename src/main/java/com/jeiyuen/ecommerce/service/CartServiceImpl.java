@@ -13,6 +13,7 @@ import com.jeiyuen.ecommerce.payload.ProductDTO;
 import com.jeiyuen.ecommerce.repository.CartItemRepository;
 import com.jeiyuen.ecommerce.repository.CartRepository;
 import com.jeiyuen.ecommerce.repository.ProductRepository;
+import com.jeiyuen.ecommerce.utility.AuthUtil;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +26,27 @@ public class CartServiceImpl implements CartService {
     CartRepository cartRepository;
     CartItemRepository cartItemRepository;
     ModelMapper modelMapper;
-    // AuthUtil authUtil;
+    AuthUtil authUtil;
 
     @Autowired
     public CartServiceImpl(ProductRepository productRepository, CartRepository cartRepository,
-            CartItemRepository cartItemRepository, ModelMapper modelMapper) {
+            CartItemRepository cartItemRepository, ModelMapper modelMapper, AuthUtil authUtil) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.modelMapper = modelMapper;
+        this.authUtil = authUtil;
     }
 
-    // Helper for existing cart verification
+    // Helper for existing cart verification for each users
     private Cart createCart() {
-        Cart userCart = cartRepository.findCartByEmail("authUtil.loggedInEmail()");
+        Cart userCart = cartRepository.findCartByEmail(authUtil.loggedInEmail());
         if (userCart != null) {
             return userCart;
         }
         Cart cart = new Cart();
         cart.setTotalPrice(0.0);
-        // cart.setUser(authUtil.loggedInUser());
+        cart.setUser(authUtil.loggedInUser());
         return cartRepository.save(cart);
     }
 
