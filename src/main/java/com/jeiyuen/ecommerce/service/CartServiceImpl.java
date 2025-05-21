@@ -161,10 +161,10 @@ public class CartServiceImpl implements CartService {
         Cart userCart = cartRepository.findCartByEmail(emailId);
         Long cartId = userCart.getCartId();
         Cart cart = cartRepository.findById(cartId)
-            .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         // Validate product
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
         if (product.getQuantity() == 0) {
             throw new ApiException(product.getProductName() + " is currently out of stock");
         }
@@ -184,20 +184,36 @@ public class CartServiceImpl implements CartService {
         cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * i));
         cartRepository.save(cart);
         CartItem updatedItem = cartItemRepository.save(cartItem);
-        if (updatedItem.getQuantity() == 0){
+        if (updatedItem.getQuantity() == 0) {
             cartItemRepository.deleteById(updatedItem.getCartItemId());
         }
         // Map changes to DTO
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
         List<CartItem> cartItems = cart.getCartItems();
         Stream<ProductDTO> productStream = cartItems.stream()
-            .map(item -> {
-                ProductDTO prd = modelMapper.map(item.getProduct(), ProductDTO.class);
-                prd.setQuantity(item.getQuantity());
-                return prd;
-            });
+                .map(item -> {
+                    ProductDTO prd = modelMapper.map(item.getProduct(), ProductDTO.class);
+                    prd.setQuantity(item.getQuantity());
+                    return prd;
+                });
         cartDTO.setProducts(productStream.toList());
         return cartDTO;
+    }
+
+    @Override
+    public String deleteProductFromCart(Long cartId, Long productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
+        
+        // Validate
+        if (cartItem == null){
+            throw new ResourceNotFoundException("Product", "productId", productId);
+        }
+        // Update Cart total price then delete the item
+        cart.setTotalPrice(cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
+        cartItemRepository.deleteCartItemByCartIdAndProductId(cartId, productId);
+        return "Product " + cartItem.getProduct().getProductName() + " successfully removed from the cart";
     }
 
 }
