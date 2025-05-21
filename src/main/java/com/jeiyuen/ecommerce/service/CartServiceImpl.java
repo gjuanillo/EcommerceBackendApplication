@@ -175,14 +175,22 @@ public class CartServiceImpl implements CartService {
         // Validate if product exists in the cart
         CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
         if (cartItem == null) {
-            throw new ApiException("Product with ID " + productId + "is not available in the cart!");
+            throw new ApiException("Product with ID " + productId + " is not available in the cart!");
         }
-        // Update
-        cartItem.setProductPrice(product.getSpecialPrice());
-        cartItem.setQuantity(cartItem.getQuantity() + i);
-        cartItem.setDiscount(product.getDiscount());
-        cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * i));
-        cartRepository.save(cart);
+        int newQuantity = cartItem.getQuantity() + i;
+        if (newQuantity < 0) {
+            throw new ApiException("The resulting quantity cannot be negative");
+        }
+        if (newQuantity == 0) {
+            deleteProductFromCart(cartId, productId);
+        } else {
+            // Update
+            cartItem.setProductPrice(product.getSpecialPrice());
+            cartItem.setQuantity(cartItem.getQuantity() + i);
+            cartItem.setDiscount(product.getDiscount());
+            cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * i));
+            cartRepository.save(cart);
+        }
         CartItem updatedItem = cartItemRepository.save(cartItem);
         if (updatedItem.getQuantity() == 0) {
             cartItemRepository.deleteById(updatedItem.getCartItemId());
@@ -200,14 +208,15 @@ public class CartServiceImpl implements CartService {
         return cartDTO;
     }
 
+    @Transactional
     @Override
     public String deleteProductFromCart(Long cartId, Long productId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
         CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
-        
+
         // Validate
-        if (cartItem == null){
+        if (cartItem == null) {
             throw new ResourceNotFoundException("Product", "productId", productId);
         }
         // Update Cart total price then delete the item
