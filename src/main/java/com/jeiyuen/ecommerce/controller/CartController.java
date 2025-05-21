@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,11 +47,21 @@ public class CartController {
     }
 
     @GetMapping("/users/cart")
-    public ResponseEntity<CartDTO> getUserCart(){
+    public ResponseEntity<CartDTO> getUserCart() {
         String emailId = authUtil.loggedInEmail();
         Cart cart = cartRepository.findCartByEmail(emailId);
         Long cartId = cart.getCartId();
         CartDTO cartDTO = cartService.getCart(emailId, cartId);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
+
+    @PutMapping("/products/{productId}/quantity/{operation}")
+    public ResponseEntity<CartDTO> updateCartProduct(@PathVariable("productId") Long productId,
+            @PathVariable("operation") String operation) {
+            CartDTO cartDTO = cartService.updateProductQuantityInCart(productId, 
+                    operation.equalsIgnoreCase("delete") ? -1 : 1
+                    );
+            return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+    }
+
 }
