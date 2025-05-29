@@ -1,14 +1,12 @@
 package com.jeiyuen.ecommerce.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -46,18 +44,14 @@ public class Address {
     @Size(min = 6, message = "Zip code must be at least 6 characters!")
     private String zipCode;
 
-    @ManyToMany(mappedBy = "addresses")
-    private List<User> users = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; 
 
     public Address() {
     }
 
-    public Address(@NotBlank @Size(min = 3, message = "Street name must be at least 3 characters!") String street,
-            @NotBlank @Size(min = 3, message = "Building name must be at least 3 characters!") String buildingName,
-            @NotBlank @Size(min = 3, message = "City name must be at least 3 characters!") String cityName,
-            @NotBlank @Size(min = 3, message = "State must be at least 3 characters!") String state,
-            @NotBlank @Size(min = 3, message = "Country must be at least 3 characters!") String country,
-            @NotBlank @Size(min = 6, message = "Zip code must be at least 6 characters!") String zipCode) {
+    public Address(String street, String buildingName,String cityName, String state, String country, String zipCode) {
         this.street = street;
         this.buildingName = buildingName;
         this.cityName = cityName;
@@ -122,12 +116,12 @@ public class Address {
         this.zipCode = zipCode;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
