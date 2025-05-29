@@ -52,12 +52,7 @@ public class Address {
     public Address() {
     }
 
-    public Address(@NotBlank @Size(min = 3, message = "Street name must be at least 3 characters!") String street,
-            @NotBlank @Size(min = 3, message = "Building name must be at least 3 characters!") String buildingName,
-            @NotBlank @Size(min = 3, message = "City name must be at least 3 characters!") String cityName,
-            @NotBlank @Size(min = 3, message = "State must be at least 3 characters!") String state,
-            @NotBlank @Size(min = 3, message = "Country must be at least 3 characters!") String country,
-            @NotBlank @Size(min = 6, message = "Zip code must be at least 6 characters!") String zipCode) {
+    public Address(String street, String buildingName,String cityName, String state, String country, String zipCode) {
         this.street = street;
         this.buildingName = buildingName;
         this.cityName = cityName;
