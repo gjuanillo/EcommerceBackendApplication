@@ -1,5 +1,7 @@
 package com.jeiyuen.ecommerce.controller;
 
+import java.util.List;
+
 import jakarta.validation.Valid;
 
 import com.jeiyuen.ecommerce.model.User;
@@ -10,6 +12,7 @@ import com.jeiyuen.ecommerce.utility.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,4 +37,11 @@ public class AddressController {
         AddressDTO savedAddressDto = addressService.createAddress(addressDTO, user);
         return new ResponseEntity<>(savedAddressDto, HttpStatus.CREATED);
     }
+
+    @GetMapping("/addresses")
+    public ResponseEntity<List<AddressDTO>> getAddresses(){
+        List<AddressDTO> addressDTOs = addressService.getAddresses();
+        return new ResponseEntity<>(addressDTOs, HttpStatus.OK);
+    }
+
 }

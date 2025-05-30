@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddressServiceImpl implements AddressService{
+public class AddressServiceImpl implements AddressService {
 
     private ModelMapper modelMapper;
     private AddressRepository addressRepository;
 
     @Autowired
-    public AddressServiceImpl(ModelMapper modelMapper, AddressRepository addressRepository){
+    public AddressServiceImpl(ModelMapper modelMapper, AddressRepository addressRepository) {
         this.modelMapper = modelMapper;
         this.addressRepository = addressRepository;
     }
@@ -33,6 +33,15 @@ public class AddressServiceImpl implements AddressService{
         address.setUser(user);
         Address savedAddress = addressRepository.save(address);
         return modelMapper.map(savedAddress, AddressDTO.class);
+    }
+
+    @Override
+    public List<AddressDTO> getAddresses() {
+        List<Address> addresses = addressRepository.findAll();
+        List<AddressDTO> addressDTOs = addresses.stream()
+                .map(address -> modelMapper.map(address, AddressDTO.class))
+                .toList();
+        return addressDTOs;
     }
 
 }
