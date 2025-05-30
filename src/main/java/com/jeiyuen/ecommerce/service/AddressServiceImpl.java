@@ -2,6 +2,7 @@ package com.jeiyuen.ecommerce.service;
 
 import java.util.List;
 
+import com.jeiyuen.ecommerce.exceptions.ResourceNotFoundException;
 import com.jeiyuen.ecommerce.model.Address;
 import com.jeiyuen.ecommerce.model.User;
 import com.jeiyuen.ecommerce.payload.AddressDTO;
@@ -42,6 +43,13 @@ public class AddressServiceImpl implements AddressService {
                 .map(address -> modelMapper.map(address, AddressDTO.class))
                 .toList();
         return addressDTOs;
+    }
+
+    @Override
+    public AddressDTO getAddressById(Long addressId) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address", "addressId", addressId));
+        return modelMapper.map(address, AddressDTO.class);
     }
 
 }
