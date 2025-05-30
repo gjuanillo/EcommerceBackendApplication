@@ -64,12 +64,12 @@ public class AddressController {
     public ResponseEntity<AddressDTO> updateUserAddress(
             @PathVariable("addressId") Long addressId,
             @RequestBody AddressDTO addressDTO) {
-            AddressDTO address = addressService.updateAddress(addressId, addressDTO);
-            return new ResponseEntity<>(address, HttpStatus.OK);
+        AddressDTO address = addressService.updateAddress(addressId, addressDTO);
+        return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
     @DeleteMapping("/addresses/{addressId}")
-    public ResponseEntity<String> updateAddress(@PathVariable("addressId") Long addressId){
+    public ResponseEntity<String> deleteAddress(@PathVariable("addressId") Long addressId) {
         String status = addressService.deleteAddress(addressId);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
