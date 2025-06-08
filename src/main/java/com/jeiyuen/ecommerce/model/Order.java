@@ -14,29 +14,30 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 
 @Entity
-@Table(name="orders")
-public class Order{
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
     @Email
-    @Column(name="email", nullable=false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDate orderDate;
 
-    // @OneToOne
-    // @JoinColumn(name= "payment_id")
-    // private Payment payment;
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     private Double totalAmount;
 
@@ -49,12 +50,13 @@ public class Order{
     public Order() {
     }
 
-    public Order(Long orderId, String email, List<OrderItem> orderItems, LocalDate orderDate, Double totalAmount,
-            String orderStatus, Address address) {
+    public Order(Long orderId, String email, List<OrderItem> orderItems, LocalDate orderDate, Payment payment,
+            Double totalAmount, String orderStatus, Address address) {
         this.orderId = orderId;
         this.email = email;
         this.orderItems = orderItems;
         this.orderDate = orderDate;
+        this.payment = payment;
         this.totalAmount = totalAmount;
         this.orderStatus = orderStatus;
         this.address = address;
@@ -92,6 +94,14 @@ public class Order{
         this.orderDate = orderDate;
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
     public Double getTotalAmount() {
         return totalAmount;
     }
@@ -118,7 +128,7 @@ public class Order{
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, email, orderItems, orderDate, totalAmount, orderStatus, address);
+        return Objects.hash(orderId, email, orderItems, orderDate, payment, totalAmount, orderStatus, address);
     }
 
     @Override
@@ -135,15 +145,15 @@ public class Order{
         Order other = (Order) obj;
         return Objects.equals(orderId, other.orderId) && Objects.equals(email, other.email)
                 && Objects.equals(orderItems, other.orderItems) && Objects.equals(orderDate, other.orderDate)
-                && Objects.equals(totalAmount, other.totalAmount) && Objects.equals(orderStatus, other.orderStatus)
-                && Objects.equals(address, other.address);
+                && Objects.equals(payment, other.payment) && Objects.equals(totalAmount, other.totalAmount)
+                && Objects.equals(orderStatus, other.orderStatus) && Objects.equals(address, other.address);
     }
 
     @Override
     public String toString() {
         return "Order{orderId=" + orderId + ", email=" + email + ", orderItems=" + orderItems + ", orderDate="
-                + orderDate + ", totalAmount=" + totalAmount + ", orderStatus=" + orderStatus + ", address=" + address
-                + "}";
+                + orderDate + ", payment=" + payment + ", totalAmount=" + totalAmount + ", orderStatus=" + orderStatus
+                + ", address=" + address + "}";
     }
 
 }
