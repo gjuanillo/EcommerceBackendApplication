@@ -13,7 +13,7 @@ public interface ProductService {
     ProductDTO addProduct(Long categoryId, ProductDTO product);
 
     // List all products
-    ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+    ProductResponse getAllProducts(String keyword, String category, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     // List all products on a defined category
     ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
