@@ -56,8 +56,9 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenfromUsername(userPrincipal.getUsername());
+        // NOTE: Set Secure to true or remove the method in production
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
-                .path("/api").maxAge(24 * 60 * 60).httpOnly(false).build();
+                .path("/api").maxAge(24 * 60 * 60).httpOnly(false).secure(false).build();
         return cookie;
     }
 
@@ -89,7 +90,8 @@ public class JwtUtils {
 
     // Validate JWT
     public boolean validateJwtToken(String authToken) {
-        // Returns false immediately if null (this way, log in/sign up does not clutter logs with unnecessary error message)
+        // Returns false immediately if null (this way, log in/sign up does not clutter
+        // logs with unnecessary error message)
         if (authToken == null || authToken.trim().isEmpty()) {
             logger.debug("No JWT token present in request.");
             return false;
