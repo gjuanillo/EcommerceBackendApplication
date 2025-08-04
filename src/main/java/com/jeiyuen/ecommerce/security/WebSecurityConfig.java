@@ -1,5 +1,6 @@
 package com.jeiyuen.ecommerce.security;
 
+import java.util.List;
 import java.util.Set;
 
 import com.jeiyuen.ecommerce.model.Role;
@@ -12,6 +13,7 @@ import com.jeiyuen.ecommerce.security.jwt.AuthTokenFilter;
 import com.jeiyuen.ecommerce.security.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -63,10 +66,22 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Value("${frontend.url}")
+    String frontEndURL;
+
     @Bean
     public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
         // Setups the security config to have any request be authenticated
-        http.csrf(csrf -> csrf.disable())
+        http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of(frontEndURL)); // Make sure this is injected via @Value
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
+                    return config;
+                }))
+                .csrf(csrf -> csrf.disable())
                 // Make use of the customized AuthEntryPointJwt
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 // Make session stateless to enable JWT auth
