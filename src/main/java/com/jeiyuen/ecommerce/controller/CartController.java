@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jeiyuen.ecommerce.model.Cart;
 import com.jeiyuen.ecommerce.payload.CartDTO;
+import com.jeiyuen.ecommerce.payload.CartItemDTO;
 import com.jeiyuen.ecommerce.repository.CartRepository;
 import com.jeiyuen.ecommerce.service.CartService;
 import com.jeiyuen.ecommerce.utility.AuthUtil;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +34,12 @@ public class CartController {
         this.cartService = cartService;
         this.authUtil = authUtil;
         this.cartRepository = cartRepository;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems) {
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/products/{productId}/quantity/{quantity}")
@@ -67,7 +75,7 @@ public class CartController {
     @DeleteMapping("/{cartId}/product/{productId}")
     public ResponseEntity<String> deleteProductFromCart(@PathVariable("cartId") Long cartId,
             @PathVariable("productId") Long productId) {
-            String status = cartService.deleteProductFromCart(cartId, productId);
-            return new ResponseEntity<>(status, HttpStatus.OK);
+        String status = cartService.deleteProductFromCart(cartId, productId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 }
