@@ -2,50 +2,24 @@ package com.jeiyuen.ecommerce.payload;
 
 import java.util.Objects;
 
-public class CartItemDTO{
-
-    private Long CartItemsId;
-    private CartDTO cart;
-    private ProductDTO productDTO;
+public class CartItemDTO {
+    private Long productId;
     private Integer quantity;
-    private Double discount;
-    private Double productPrice;
-    
+
     public CartItemDTO() {
     }
 
-    public CartItemDTO(Long cartItemsId, CartDTO cart, ProductDTO productDTO, Integer quantity, Double discount,
-            Double productPrice) {
-        CartItemsId = cartItemsId;
-        this.cart = cart;
-        this.productDTO = productDTO;
+    public CartItemDTO(Long productId, Integer quantity) {
+        this.productId = productId;
         this.quantity = quantity;
-        this.discount = discount;
-        this.productPrice = productPrice;
     }
 
-    public Long getCartItemsId() {
-        return CartItemsId;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setCartItemsId(Long cartItemsId) {
-        CartItemsId = cartItemsId;
-    }
-
-    public CartDTO getCart() {
-        return cart;
-    }
-
-    public void setCart(CartDTO cart) {
-        this.cart = cart;
-    }
-
-    public ProductDTO getProductDTO() {
-        return productDTO;
-    }
-
-    public void setProductDTO(ProductDTO productDTO) {
-        this.productDTO = productDTO;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Integer getQuantity() {
@@ -56,25 +30,9 @@ public class CartItemDTO{
         this.quantity = quantity;
     }
 
-    public Double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Double discount) {
-        this.discount = discount;
-    }
-
-    public Double getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(Double productPrice) {
-        this.productPrice = productPrice;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(CartItemsId, cart, productDTO, quantity, discount, productPrice);
+        return Objects.hash(productId, quantity);
     }
 
     @Override
@@ -89,15 +47,12 @@ public class CartItemDTO{
             return false;
         }
         CartItemDTO other = (CartItemDTO) obj;
-        return Objects.equals(CartItemsId, other.CartItemsId) && Objects.equals(cart, other.cart)
-                && Objects.equals(productDTO, other.productDTO) && Objects.equals(quantity, other.quantity)
-                && Objects.equals(discount, other.discount) && Objects.equals(productPrice, other.productPrice);
+        return Objects.equals(productId, other.productId) && Objects.equals(quantity, other.quantity);
     }
 
     @Override
     public String toString() {
-        return "CartItemsDTO{CartItemsId=" + CartItemsId + ", cart=" + cart + ", productDTO=" + productDTO
-                + ", quantity=" + quantity + ", discount=" + discount + ", productPrice=" + productPrice + "}";
+        return "CartItemDTO{productId=" + productId + ", quantity=" + quantity + "}";
     }
 
 }
